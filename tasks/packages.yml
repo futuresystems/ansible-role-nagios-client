@@ -1,0 +1,13 @@
+---
+
+- name: packages | install
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+  with_items:
+    - nagios-plugins
+    - nagios-nrpe-server
+  tags:
+    - nagios
+    - client
+    - packages

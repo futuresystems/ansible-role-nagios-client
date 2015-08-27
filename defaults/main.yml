@@ -1,0 +1,4 @@
+---
+
+nagios_client_nrpe_cfg: /etc/nagios/nrpe.cfg
+

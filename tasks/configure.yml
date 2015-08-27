@@ -1,0 +1,8 @@
+---
+
+- name: configure | allow server
+  lineinfile:
+    dest: "{{ nagios_client_nrpe_cfg }}"
+    regexp: '(allowed_hosts=(?:[0-9]+\.){3}[0-9]+)'
+    backrefs: yes
+    line: '\1,{{ nagios_client_nagios_server_address }}'
