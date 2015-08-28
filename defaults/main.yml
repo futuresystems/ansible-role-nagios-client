@@ -1,4 +1,5 @@
 ---
 
 nagios_client_nrpe_cfg: /etc/nagios/nrpe.cfg
-
+nagios_client_nrpe_d_path: /etc/nagios/nrpe.d
+nagios_client_plugins_path: /usr/lib/nagios/plugins

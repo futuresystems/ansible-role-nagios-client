@@ -1,0 +1,6 @@
+---
+
+- name: reload nrpe
+  service:
+    name: nagios-nrpe-server
+    state: reloaded

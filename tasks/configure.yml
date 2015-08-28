@@ -6,3 +6,13 @@
     regexp: '(allowed_hosts=(?:[0-9]+\.){3}[0-9]+)'
     backrefs: yes
     line: '\1,{{ nagios_client_nagios_server_address }}'
+  notify: reload nrpe
+
+- name: configure | commands
+  template:
+    dest: "{{ nagios_client_nrpe_d_path }}/commands.cfg"
+    src: commands.cfg.j2
+    owner: root
+    group: root
+    mode: 0444
+  notify: reload nrpe
