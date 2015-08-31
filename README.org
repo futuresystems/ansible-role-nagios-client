@@ -1,0 +1,64 @@
+* ansible-role-nagios-client
+
+This role deploys configures nodes to use a Nagios server.
+
+Nagios commands are created on deployment by adding to the =nagios_client_commands= variable.
+=nagios_client_commands= is a list of of hash elements, where each hash has a =name= and =line= attribute.
+The =name= become the name of the nagios command object and =line= is the commandline commandline to execute.
+
+For example
+
+#+BEGIN_SRC yaml
+nagios_client_commands:
+
+  - name: check_proc_ntpd
+    line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C ntpd
+#+END_SRC
+
+is translated into the nagios command
+
+#+begin_example
+command[check_proc_ntpd] /usr/lib/nagios/plugins/check_procs -c 1:1 -C ntpd
+#+end_example
+
+which can then be called from the controller
+#+begin_example
+# check_nrpe -H ntpserver -C check_proc_ntpd
+#+end_example
+
+* Variables
+
+| variable                | default    | type           | description                           |
+|-------------------------+------------+----------------+---------------------------------------|
+| =nagios_server_address= | *REQUIRED* | string         | Address of the nagios controller node |
+| =commands=              | *REQUIRED* | list of hashes | Nagios commands to create             |
+
+
+* Example
+
+#+begin_src yaml
+- hosts: all:!nagios-01
+  roles:
+
+    - role: nagios_client
+
+      nagios_client_nagios_server_address: "{{ global.hosts.nagios }}"
+
+      nagios_client_commands:
+
+        - name: check_proc_ntpd
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C ntpd
+
+        - name: check_proc_mysqld
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C mysqld
+
+        - name: check_proc_mongod
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C mongod
+
+        - name: check_proc_apache
+          line: /usr/lib/nagios/plugins/check_procs -c 1:30 -C apache2
+
+        - name: check_proc_glance-api
+          line: >-
+            /usr/lib/nagios/plugins/check_procs -c 1: -C glance-api
+#+end_src
