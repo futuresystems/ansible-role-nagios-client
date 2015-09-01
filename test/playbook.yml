@@ -1,0 +1,44 @@
+---
+
+- hosts: all
+
+  pre_tasks:
+
+    - name: update apt cache
+      apt:
+        update_cache: yes
+
+    - name: install some services
+      apt:
+        pkg: "{{ item }}"
+        state: present
+      with_items:
+        - ntp
+        - mysql-server
+        - apache2
+
+    - name: start services
+      service:
+        name: "{{ item }}"
+        state: started
+      with_items:
+        - ntp
+        - mysql
+        - apache2
+
+  roles:
+
+    - role: nagios_client
+
+      nagios_client_nagios_server_address: 127.0.0.1
+
+      nagios_client_commands:
+
+        - name: check_proc_ntpd
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C ntpd
+
+        - name: check_proc_mysqld
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C mysqld
+
+        - name: check_proc_apache2
+          line: /usr/lib/nagios/plugins/check_procs -c 1:1 -C apache2
